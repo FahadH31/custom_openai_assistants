@@ -1,0 +1,89 @@
+.container {
+  margin: 0;
+  padding: 40px;
+  min-height: 100vh;
+  min-width: 100vw;
+  /* Ensure the body takes up at least the viewport height */
+  background-color: #f8f8f8;
+  display: flex;
+  flex-direction: column;
+}
+
+#title{
+  align-self: center;
+}
+
+.chat-container {
+  height: 60vh;
+  margin-left: 100px;
+  margin-right: 100px;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  background-color: white;
+  border: 1px solid #ccc;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  font-size: 17pt;
+}
+
+.chat-interact {
+  display: flex;
+  flex-direction: row;
+  margin-left: 100px;
+  margin-right: 100px;
+}
+
+#userInput{
+  width: 95%;
+  padding: 10px;
+  margin-right: 10px;
+  border-radius: 15px;
+  background-color: white;
+  border: 1px solid #ccc;
+}
+
+#sendButton{
+  padding: 10px 20px;
+  background-color: black;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  max-width: 75px;
+  margin-left: auto;
+}
+
+.message-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.user-message {
+  background-color: #007bff;
+  color: #fff;
+  border-radius: 10px;
+  padding: 10px;
+  margin-left: auto; /* Align user messages to the right */
+  margin-right: 10px;
+  text-align: right;
+}
+
+.bot-message {
+  background-color: #28a745;
+  color: #fff;
+  border-radius: 10px;
+  padding: 10px;
+  margin-right: auto; /* Align bot messages to the left */
+  margin-left: 10px;
+  text-align: left;
+}
+
+
+
+
+
+
