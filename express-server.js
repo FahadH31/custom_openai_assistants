@@ -10,14 +10,20 @@ const openai = new OpenAI({
 // Serve static files from the 'public' directory
 app.use(express.static('public'));
 
-app.get('/getResponse', async (req, res) => {
+app.post('/getResponse', async (req, res) => {
+    const userInput = req.body.userInput;
+    if (!userInput) {
+        return res.status(400).json({ error: 'User input missing' });
+    }
+
     const response = await openai.chat.completions.create({
         model: 'gpt-3.5-turbo',
-        messages: [{ "role": "user", "content": "Hello!" }],
+        messages: [{ "role": "user", "content": userInput }],
         max_tokens: 100
     });
     res.json(response); // Send the response back to the client
 });
+
 
 app.listen(3000, () => {
     console.log("Server Started");

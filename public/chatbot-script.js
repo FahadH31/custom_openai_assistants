@@ -1,3 +1,10 @@
+// Add event listener for Enter key press on text input
+document.getElementById('userInput').addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+        sendMessage(); // Call sendMessage() when Enter key is pressed
+    }
+});
+
 async function sendMessage() {
     const userInput = document.getElementById('userInput').value.trim();
     if (!userInput) return;
@@ -5,7 +12,11 @@ async function sendMessage() {
     appendMessage(userInput, 'user');
 
     const response = await fetch('/getResponse', {
-        method: 'GET',
+        method: 'POST', // Change method to POST
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ userInput }) // Send user input as JSON
     });
 
     const responseData = await response.json();

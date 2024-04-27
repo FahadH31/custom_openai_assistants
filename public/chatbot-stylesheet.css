@@ -63,6 +63,7 @@
 }
 
 .user-message {
+  max-width: 40vw;
   background-color: #007bff;
   color: #fff;
   border-radius: 10px;
@@ -73,6 +74,7 @@
 }
 
 .bot-message {
+  max-width: 40vw;
   background-color: #28a745;
   color: #fff;
   border-radius: 10px;
