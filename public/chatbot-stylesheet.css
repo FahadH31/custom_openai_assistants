@@ -14,7 +14,7 @@
 }
 
 .chat-container {
-  height: 60vh;
+  height: 70vh;
   margin-left: 100px;
   margin-right: 100px;
   margin-bottom: 20px;
@@ -35,7 +35,7 @@
 }
 
 #userInput{
-  width: 95%;
+  width: 97%;
   padding: 10px;
   margin-right: 10px;
   border-radius: 15px;
@@ -70,7 +70,7 @@
   padding: 10px;
   margin-left: auto; /* Align user messages to the right */
   margin-right: 10px;
-  text-align: right;
+  text-align: left;
 }
 
 .bot-message {
@@ -84,8 +84,21 @@
   text-align: left;
 }
 
+.profile-image {
+  width: 45px; /* Adjust as needed */
+  height: 45px; /* Adjust as needed */
+  border-radius: 50%;
+  margin: 5px;
+}
 
+/* Ensure profile image is aligned correctly for bot messages */
+.user-message .profile-image {
+  margin-left: -50px; /* Shift profile picture to the left for bot messages */
+  margin-right: 10px; /* Offset to maintain alignment */
+}
 
-
-
-
+/* Ensure profile image is aligned correctly for bot messages */
+.bot-message .profile-image {
+  margin-left: 10px; /* Shift profile picture to the left for bot messages */
+  margin-right: -50px; /* Offset to maintain alignment */
+}
