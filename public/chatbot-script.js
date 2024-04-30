@@ -39,10 +39,10 @@ function appendMessage(message, sender) {
     const profileImg = document.createElement('img');
     profileImg.className = 'profile-image';
     if (sender === 'user') {
-      profileImg.src = 'user-image.png'; // Path to user profile picture
+      profileImg.src = 'Images/user-image.png'; // Path to user profile picture
       messageDiv.classList.add('user-message');
     } else {
-      profileImg.src = 'bot-image.png'; // Path to bot profile picture
+      profileImg.src = 'Images/bot-image.png'; // Path to bot profile picture
       messageDiv.classList.add('bot-message');
     }
   
