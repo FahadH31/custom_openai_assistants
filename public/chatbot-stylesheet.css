@@ -1,9 +1,9 @@
 .container {
   margin: 0;
   padding: 40px;
+  /* Ensure the body takes up at least the viewport height */
   min-height: 100vh;
   min-width: 100vw;
-  /* Ensure the body takes up at least the viewport height */
   background-color: #f8f8f8;
   display: flex;
   flex-direction: column;

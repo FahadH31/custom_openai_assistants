@@ -1,52 +1,48 @@
-// Add event listener for Enter key press on text input
+// Allow for message to be submitted with enter key.
 document.getElementById('userInput').addEventListener('keypress', function(event) {
     if (event.key === 'Enter') {
-        sendMessage(); // Call sendMessage() when Enter key is pressed
+        sendMessage();
     }
 });
 
 async function sendMessage() {
-    const userInput = document.getElementById('userInput').value.trim();
-    if (!userInput) return;
-    
-    appendMessage(userInput, 'user');
-    
-    const response = await fetch('/getResponse', {
-        method: 'POST', // Change method to POST
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ userInput }) // Send user input as JSON
-    });
+  // Remove whitespace from user input.
+  const userInput = document.getElementById('userInput').value.trim();
+  if (!userInput) return; // Exit if empty
 
-    document.getElementById('userInput').value = ''; // Clear Input Field
+  appendMessage(userInput, 'user'); // Display the user message
+  document.getElementById('userInput').value = ''; // Clear Input Field
 
-    const responseData = await response.json();
-    const botResponse = responseData.choices[0].message.content;
 
-    appendMessage(botResponse, 'bot');
 }
 
+// Responsible for displaying messages on the screen.
 function appendMessage(message, sender) {
     const chatContainer = document.getElementById('chatContainer');
+    
+    // Create a div called messageContainer
     const messageContainer = document.createElement('div');
+    // Assign it the same class name.
     messageContainer.className = 'message-container';
-  
+    
+    // Set text content of messageDiv to be the one obtained from the parameter.
     const messageDiv = document.createElement('div');
     messageDiv.className = 'message';
     messageDiv.textContent = message;
   
+    // Create respective profile img elements for each message based on sender.
     const profileImg = document.createElement('img');
     profileImg.className = 'profile-image';
     if (sender === 'user') {
-      profileImg.src = 'Images/user-image.png'; // Path to user profile picture
+      profileImg.src = 'Images/user-image.png';
       messageDiv.classList.add('user-message');
     } else {
-      profileImg.src = 'Images/bot-image.png'; // Path to bot profile picture
+      profileImg.src = 'Images/bot-image.png'; 
       messageDiv.classList.add('bot-message');
     }
   
-    // Append message and profile image based on sender
+    // Ensure correct display for each sender 
+    // (pic and message positioning)
     if (sender === 'user') {
       messageContainer.appendChild(messageDiv);
       messageContainer.appendChild(profileImg);
