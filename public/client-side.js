@@ -1,3 +1,19 @@
+// Client-side error handling if on chatbot.html w/o creating an assistant first.
+if (window.location.href.includes("chatbot.html")) {
+  // Fetch the information from the server
+  fetch('/api/checkAssistant')
+    .then(response => response.json())
+    .then(data => {
+      if (!data.assistantExists) {
+        alert("It seems you haven't created an assistant yet. We'll redirect you to the appropriate page now.");
+        window.location.href = "index.html"; // Redirect to index.html
+      }
+    })
+    .catch(err => {
+      console.error('Error fetching assistant status:', err);
+    });
+}
+
 // Allow for message to be submitted with enter key.
 document.getElementById('userInput').addEventListener('keypress', function(event) {
     if (event.key === 'Enter') {

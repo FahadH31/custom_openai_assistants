@@ -1,33 +1,37 @@
 body {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     margin: 0;
     font-family: Arial, sans-serif;
+    background-color: #f8f8f8;
+}
+
+h3{
+    padding: 10px;
 }
 
 .container {
     width: 80%;
     max-width: 600px;
     padding: 20px;
-    border: 1px solid #ccc;
     border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ccc;
+    background-color: white;
 }
 
 .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 40px;
 }
 
 label {
     display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
+    font-weight: 500;
 }
 
 input[type="text"],
-input[type="file"],
 textarea {
     width: 100%;
     padding: 8px;
@@ -37,15 +41,20 @@ textarea {
     box-sizing: border-box;
 }
 
+input[type="file"]{
+    width: auto;
+    padding: 8px;
+    margin-top: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
 button {
     padding: 10px 20px;
-    background-color: #007bff;
+    background-color: black;
     color: #fff;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-}
-
-button:hover {
-    background-color: #0056b3;
+    margin-left: auto;
 }

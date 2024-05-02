@@ -1,7 +1,7 @@
 .container {
   margin: 0;
   padding: 40px;
-  /* Ensure the body takes up at least the viewport height */
+  /* Ensure the body takes up at least the viewport height and width */
   min-height: 100vh;
   min-width: 100vw;
   background-color: #f8f8f8;

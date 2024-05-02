@@ -54,14 +54,21 @@ app.post('/submit-form', upload.single('uploadFile'), async (req, res) => {
     // });
 
 
-
     // Append company name to the URL for chatbot, so it can be used in the title.
     res.redirect(`/chatbot.html?companyName=${encodeURIComponent(companyName)}`);
 });
 
+// Server-side error handling if accessing chatbot w/o creating an assistant first.
+app.get('/api/checkAssistant', (req, res) => {
+    // Logic to check if an assistant exists
+    const assistantExists = !!app.locals.assistant;
+    res.json({ assistantExists });
+  });
+
 
 // Handle Conversation 
 app.post('/getResponse', async (req, res) => {
+   
     const userInput = req.body.userInput;
     if (!userInput) {
         return res.status(400).json({ error: 'User input missing' });
