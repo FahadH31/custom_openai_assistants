@@ -13,8 +13,28 @@ async function sendMessage() {
   appendMessage(userInput, 'user'); // Display the user message
   document.getElementById('userInput').value = ''; // Clear Input Field
 
+  try {
+    const response = await fetch('/getResponse', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ userInput }),
+    });
 
+    if (!response.ok) {
+      throw new Error('Network response was not ok.');
+    }
+
+    const responseData = await response.json();
+    // Process responseData as needed (e.g., display response message)
+    appendMessage(responseData.message, 'server');
+  } catch (error) {
+    console.error('Error sending message:', error);
+    // Handle error as needed
+  }
 }
+
 
 // Responsible for displaying messages on the screen.
 function appendMessage(message, sender) {

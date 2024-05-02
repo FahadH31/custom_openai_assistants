@@ -1,3 +1,10 @@
+<!-- To Do 
+- Fix File Upload
+- Improve Create Chatbot Page Styling
+- Add loading bubble while response is being generated.
+- Create some sort of redirect. If you access chatbot.html without creating a chatbot.
+-->
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -10,7 +17,7 @@
 
 <body>
     <div class="container">
-        <form id="chatbotForm" action="/submit-form" method = "POST">
+        <form id="chatbotForm" action="/submit-form" method = "POST" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="companyName">Name of Company</label>
                 <input type="text" id="companyName" name="companyName" required>
