@@ -1,5 +1,5 @@
-const dotenv = require("dotenv");
 const OpenAI = require("openai");
+const dotenv = require("dotenv");
 const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -22,6 +22,17 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+// Middleware to parse incoming request bodies
+app.use(express.json());
+
+// Route to handle clearing server variables
+app.post('/clearData', (req, res) => {
+    app.locals.assistant = null;
+    app.locals.thread = null;
+    res.sendStatus(200); // Send a success response
+});
+
+
 // Handle create-chatbot form submission
 app.post('/submit-form', upload.single('uploadFile'), async (req, res) => {
     // Extract data from form fields
@@ -37,7 +48,12 @@ app.post('/submit-form', upload.single('uploadFile'), async (req, res) => {
         model: "gpt-3.5-turbo"
     });
 
+    // Create Thread
+    const thread = await openai.beta.threads.create();
+
+    // Make these available globally.
     app.locals.assistant = assistant;
+    app.locals.thread = thread;
 
     // // Integrating File Upload w/ Chatbot.                                           // ERROR WITH FILE UPLOAD HERE.
     // const fileStreams = [uploadedFile.path].map((path) =>
@@ -52,7 +68,6 @@ app.post('/submit-form', upload.single('uploadFile'), async (req, res) => {
     // await openai.beta.assistants.update(assistant.id, {
     //     tool_resources: { file_search: { vector_store_ids: [vectorStore.id] } },
     // });
-
 
     // Append company name to the URL for chatbot, so it can be used in the title.
     res.redirect(`/chatbot.html?companyName=${encodeURIComponent(companyName)}`);
@@ -74,12 +89,9 @@ app.post('/getResponse', async (req, res) => {
         return res.status(400).json({ error: 'User input missing' });
     }
 
-    // Create Thread
-    const thread = await openai.beta.threads.create();
-
     // Add user message to thread.
     const message = await openai.beta.threads.messages.create(
-        thread.id,
+        app.locals.thread.id,
         {
             role: "user",
             content: userInput
@@ -88,7 +100,7 @@ app.post('/getResponse', async (req, res) => {
 
     // Run message to generate response
     let run = await openai.beta.threads.runs.createAndPoll(
-        thread.id,
+        app.locals.thread.id,
         {
             assistant_id: app.locals.assistant.id
         }

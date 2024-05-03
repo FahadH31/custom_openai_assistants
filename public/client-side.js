@@ -43,7 +43,7 @@ async function sendMessage() {
     }
 
     const responseData = await response.json();
-    // Process responseData as needed (e.g., display response message)
+    // Display response
     appendMessage(responseData.message, 'server');
   } catch (error) {
     console.error('Error sending message:', error);
