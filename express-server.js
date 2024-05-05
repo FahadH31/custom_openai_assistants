@@ -5,10 +5,21 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const multer = require('multer');
-const upload = multer({ dest: 'uploads/' }); // Define your upload directory
 
 const app = express();
 dotenv.config();
+
+// Multer Set-Up
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './uploads'); // Upload directory
+    },
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9); // Add unique identifier to each file name
+        cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+    }
+});
+const upload = multer({storage});
 
 // Initialize API Key
 const openai = new OpenAI({
@@ -55,19 +66,26 @@ app.post('/submit-form', upload.single('uploadFile'), async (req, res) => {
     app.locals.assistant = assistant;
     app.locals.thread = thread;
 
-    // // Integrating File Upload w/ Chatbot.                                           // ERROR WITH FILE UPLOAD HERE.
-    // const fileStreams = [uploadedFile.path].map((path) =>
-    //     fs.createReadStream(path),
-    // );
-    // // Create vector store
-    // let vectorStore = await openai.beta.vectorStores.create({
-    //     name: "Uploaded File",
-    // });
-    // await openai.beta.vectorStores.fileBatches.uploadAndPoll(vectorStore.id, fileStreams)
-    // // Update assistant to use the new vector store
-    // await openai.beta.assistants.update(assistant.id, {
-    //     tool_resources: { file_search: { vector_store_ids: [vectorStore.id] } },
-    // });
+    // Integrating File Upload w/ Chatbot.
+    const file = await openai.files.create({
+        file: fs.createReadStream(uploadedFile.path),
+        purpose: "assistants"
+    });
+
+    const vectorStore = await openai.beta.vectorStores.create({
+        name: "Training Data"
+    });
+
+    const vectorStoreFile = await openai.beta.vectorStores.files.create(
+        vectorStore.id,
+        {
+          file_id: file.id
+        }
+      );
+
+    await openai.beta.assistants.update(assistant.id, {
+        tool_resources: { file_search: { vector_store_ids: [vectorStoreFile.vector_store_id] } },
+      });
 
     // Append company name to the URL for chatbot, so it can be used in the title.
     res.redirect(`/chatbot.html?companyName=${encodeURIComponent(companyName)}`);
@@ -78,12 +96,12 @@ app.get('/api/checkAssistant', (req, res) => {
     // Logic to check if an assistant exists
     const assistantExists = !!app.locals.assistant;
     res.json({ assistantExists });
-  });
+});
 
 
 // Handle Conversation 
 app.post('/getResponse', async (req, res) => {
-   
+
     const userInput = req.body.userInput;
     if (!userInput) {
         return res.status(400).json({ error: 'User input missing' });
