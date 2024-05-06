@@ -141,6 +141,6 @@ app.post('/getResponse', async (req, res) => {
 });
 
 // Notify when server starts
-app.listen(process.env.port, () => {
+app.listen(3000, () => {
     console.log("Server Started");
 });
