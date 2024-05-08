@@ -1,3 +1,4 @@
+// PROJECT-SETUP-------------------------------------------------------------------------------
 const OpenAI = require("openai");
 const dotenv = require("dotenv");
 const path = require('path');
@@ -5,6 +6,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const multer = require('multer');
+const axios = require('axios');
+const cheerio = require('cheerio')
 
 const app = express();
 dotenv.config();
@@ -19,7 +22,7 @@ const storage = multer.diskStorage({
         cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
     }
 });
-const upload = multer({storage});
+const upload = multer({ storage });
 
 // Initialize API Key
 const openai = new OpenAI({
@@ -42,14 +45,72 @@ app.post('/clearData', (req, res) => {
     app.locals.thread = null;
     res.sendStatus(200); // Send a success response
 });
+//--------------------------------------------------------------------------------------------
 
 
+// FUNCTIONS-----------------------------------------------------------------------------------
+// Fetch HTML content from a URL using axios
+async function fetchHTML(url) {
+    try {
+        const response = await axios.get(url);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching HTML:', error);
+        return null;
+    }
+}
+
+// Extract textual elements from HTML using cheerio
+function extractText(html) {
+    const $ = cheerio.load(html);
+    // Extracting from body elements
+    const textContent = $('body').text();
+    return textContent;
+}
+
+// Save text content to a file
+function saveToFile(content) {
+    const fileName = "data-from-url.txt";
+    fs.writeFileSync("uploads/" + fileName, content);
+    console.log(`File '${fileName}' saved successfully!`);
+}
+
+// Create Vector Store
+async function createVectorStore(assistant, fileId) {
+    try {
+        // Step 1: Creating Vector Store
+        const vectorStore = await openai.beta.vectorStores.create({
+            name: "Training Data"
+        });
+
+        // Step 2: Adding the file to the vector store
+        const vectorStoreFile = await openai.beta.vectorStores.files.create(
+            vectorStore.id,
+            {
+                file_id: fileId
+            }
+        );
+
+        // Step 3: Updating the assistant with the vector store
+        await openai.beta.assistants.update(assistant.id, {
+            tool_resources: { file_search: { vector_store_ids: [vectorStoreFile.vector_store_id] } }
+        });
+
+    } catch (error) {
+        console.error('Error creating vector store:', error);
+        throw error; // Rethrow the error for the caller to handle
+    }
+}
+//--------------------------------------------------------------------------------------------
+
+// ROUTES--------------------------------------------------------------------------------------
 // Handle create-chatbot form submission
 app.post('/submit-form', upload.single('uploadFile'), async (req, res) => {
     // Extract data from form fields
     const companyName = req.body.companyName;
     const chatbotInstructions = req.body.chatbotInstructions;
     const uploadedFile = req.file;
+    const uploadedLink = req.body.uploadLink;
 
     // Create Chatbot
     const assistant = await openai.beta.assistants.create({
@@ -66,26 +127,39 @@ app.post('/submit-form', upload.single('uploadFile'), async (req, res) => {
     app.locals.assistant = assistant;
     app.locals.thread = thread;
 
-    // Integrating File Upload w/ Chatbot.
-    const file = await openai.files.create({
-        file: fs.createReadStream(uploadedFile.path),
-        purpose: "assistants"
-    });
+    if (uploadedLink) {
+        // Use an async function to handle asynchronous operations
+        (async () => {
+            try {
+                const urlHTML = await fetchHTML(uploadedLink); // Wait for the HTML to be fetched
+                if (urlHTML) {
+                    const urlText = extractText(urlHTML);
+                    saveToFile(urlText);
 
-    const vectorStore = await openai.beta.vectorStores.create({
-        name: "Training Data"
-    });
+                    const file = await openai.files.create({
+                        file: fs.createReadStream("uploads/data-from-url.txt"),
+                        purpose: "assistants"
+                    });
 
-    const vectorStoreFile = await openai.beta.vectorStores.files.create(
-        vectorStore.id,
-        {
-          file_id: file.id
-        }
-      );
+                    createVectorStore(app.locals.assistant, file.id)
 
-    await openai.beta.assistants.update(assistant.id, {
-        tool_resources: { file_search: { vector_store_ids: [vectorStoreFile.vector_store_id] } },
-      });
+                } else {
+                    console.error('No HTML content fetched.');
+                }
+            } catch (error) {
+                console.error('Error processing HTML:', error);
+            }
+        })();
+
+    }
+    else if (uploadedFile) {
+        const file = await openai.files.create({ // Creating openai file as copy of the uploaded one.
+            file: fs.createReadStream(uploadedFile.path),
+            purpose: "assistants"
+        });
+
+        createVectorStore(app.locals.assistant, file.id);
+    }
 
     // Append company name to the URL for chatbot, so it can be used in the title.
     res.redirect(`/chatbot.html?companyName=${encodeURIComponent(companyName)}`);

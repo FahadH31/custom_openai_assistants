@@ -34,12 +34,40 @@ Future improvements:
                     name="chatbotInstructions" rows="5" required></textarea>
             </div>
             <div class="form-group">
-                <label>Upload Training Data (.txt)</label>
-                <input type="file" id="uploadFile" placeholder="Upload File" name="uploadFile" accept=".txt" required>
+                <label>Upload Data File for Training (.txt)</label>
+                <input type="file" id="uploadFile" placeholder="Upload File" name="uploadFile" accept=".txt">
+                <br><br>
+                <p id="orText">or</p>
+                <label>Link to a Website (URL)</label>
+                <input type="url" id="uploadLink" name="uploadLink">
             </div>
             <button type="submit">Generate Chatbot</button>
         </form>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#uploadFile').change(function () {
+                $('#uploadLink').prop('required', false); // Disable URL input
+            });
+
+            $('#uploadLink').change(function () {
+                $('#uploadFile').prop('required', false); // Disable file input
+            });
+
+            // Ensure at least one option is selected before form submission
+            $('form').submit(function () {
+                if (!$('#uploadFile').val() && !$('#uploadLink').val()) {
+                    alert('Please choose either a file or provide a URL.');
+                    return false; // Prevent form submission
+                }
+                else if ($('#uploadFile').val() && $('#uploadLink').val()) {
+                    alert('Please provide only a URL, or only a file.');
+                    return false; // Prevent form submission
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>
