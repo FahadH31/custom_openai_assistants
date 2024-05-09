@@ -106,13 +106,18 @@ async function createVectorStore(assistant, fileId) {
 // ROUTES--------------------------------------------------------------------------------------
 // Handle create-chatbot form submission
 app.post('/submit-form', upload.single('uploadFile'), async (req, res) => {
-    // Extract data from form fields
+    // Importing form data
     const companyName = req.body.companyName;
     const chatbotInstructions = req.body.chatbotInstructions;
     const uploadedFile = req.file;
-    const uploadedLink = req.body.uploadLink;
+    let uploadedLinks = null;
 
-    // Create Chatbot
+    // If the text area for URLS is not empty
+    if (req.body.uploadLinks && req.body.uploadLinks.trim() !== '') {
+        uploadedLinks = req.body.uploadLinks.split('\n').filter(link => link.trim() !== ''); // Parse newline-seperated URLs
+    }
+
+    // Create an Assistant
     const assistant = await openai.beta.assistants.create({
         name: companyName + "'s Chatbot",
         instructions: chatbotInstructions,
@@ -120,50 +125,67 @@ app.post('/submit-form', upload.single('uploadFile'), async (req, res) => {
         model: "gpt-3.5-turbo"
     });
 
-    // Create Thread
+    // Create a Thread
     const thread = await openai.beta.threads.create();
-
-    // Make these available globally.
+    
+    // Make Assistant and Thread accessible throughout the code (for other routes)
     app.locals.assistant = assistant;
     app.locals.thread = thread;
 
-    if (uploadedLink) {
-        // Use an async function to handle asynchronous operations
-        (async () => {
+    // Uploaded Link Functionality
+    if (uploadedLinks) {
+        const processURL = async (url) => {
             try {
-                const urlHTML = await fetchHTML(uploadedLink); // Wait for the HTML to be fetched
+                const urlHTML = await fetchHTML(url);
                 if (urlHTML) {
                     const urlText = extractText(urlHTML);
-                    saveToFile(urlText);
-
-                    const file = await openai.files.create({
-                        file: fs.createReadStream("uploads/data-from-url.txt"),
-                        purpose: "assistants"
-                    });
-
-                    createVectorStore(app.locals.assistant, file.id)
-
+                    return urlText;
                 } else {
-                    console.error('No HTML content fetched.');
+                    console.error(`No HTML content fetched from ${url}`);
+                    return ''; // Return empty string if no content fetched
                 }
             } catch (error) {
-                console.error('Error processing HTML:', error);
+                console.error(`Error processing HTML from ${url}:`, error);
+                return ''; // Return empty string on error
             }
-        })();
+        };
 
+        try {
+            const urlTexts = await Promise.all(uploadedLinks.map(processURL)); // Process all URLs concurrently
+
+            // Concatenate all text content
+            const allTextContent = urlTexts.join('\n');
+
+            // Save concatenated content to a single file
+            const fileName = "data-from-urls.txt";
+            fs.writeFileSync("uploads/" + fileName, allTextContent);
+            console.log(`File '${fileName}' saved successfully!`);
+
+            const file = await openai.files.create({
+                file: fs.createReadStream("uploads/" + fileName),
+                purpose: "assistants"
+            });
+
+            createVectorStore(app.locals.assistant, file.id);
+
+        } catch (error) {
+            console.error('Error processing URLs:', error);
+            res.status(500).send('Error processing URLs');
+        }
     }
+    // Uploaded File Functionality
     else if (uploadedFile) {
         const file = await openai.files.create({ // Creating openai file as copy of the uploaded one.
             file: fs.createReadStream(uploadedFile.path),
             purpose: "assistants"
         });
-
         createVectorStore(app.locals.assistant, file.id);
     }
 
-    // Append company name to the URL for chatbot, so it can be used in the title.
+    // Append company name to the URL for chatbot, so it can be used to the title (and redirect)
     res.redirect(`/chatbot.html?companyName=${encodeURIComponent(companyName)}`);
 });
+
 
 // Server-side error handling if accessing chatbot w/o creating an assistant first.
 app.get('/api/checkAssistant', (req, res) => {
