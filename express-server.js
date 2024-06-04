@@ -226,7 +226,13 @@ app.post('/getResponse', async (req, res) => {
         const latestAssistantMessage = messages.data.find(message => message.role === 'assistant');
         if (latestAssistantMessage && latestAssistantMessage.content.length > 0) {
             const latestMessageText = latestAssistantMessage.content[0].text.value;
-            res.json({ message: latestMessageText });
+            
+            // Removing annotations.
+            const pattern = /【\d:\d†source】/g;
+            const pattern2 = /【\d\d:\d†source】/g;
+            const cleanedText = latestMessageText.replace(pattern, '').replace(pattern2,'');
+
+            res.json({ message: cleanedText });
         } else {
             res.status(404).json({ error: 'No assistant message found.' });
         }
