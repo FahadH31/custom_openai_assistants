@@ -1,3 +1,6 @@
 package-lock.json
 node_modules/
 .env
+desktop.ini
+To-Do.txt
+uploads/uploadFile-*

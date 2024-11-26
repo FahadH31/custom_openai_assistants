@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
+
+/* Smooth fade-in animation for the page */
 body {
     display: flex;
     flex-direction: column;
@@ -5,30 +8,52 @@ body {
     align-items: center;
     min-height: 100vh;
     margin: 0;
-    font-family: Arial, sans-serif;
+    font-family: 'Nunito Sans', sans-serif;
     background-color: #f8f8f8;
+    animation: fadeIn 1.0s ease-in-out;
 }
 
-h3{
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Title */
+h3 {
     padding: 10px;
+    font-size: 32pt;
+    font-weight: 700;
 }
 
+/* Form Container */
 .container {
     width: 80%;
     max-width: 600px;
     padding: 20px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
+    border-radius: 25px;
+    border: 2px solid #eaeaea;
     background-color: white;
+    font-size: 14pt;
+    transition: border-color 0.3s ease, transform 0.3s ease;
+}
+
+#chatbotForm{
+    display: flex;
+    flex-direction: column;
 }
 
 .form-group {
     margin-bottom: 40px;
 }
 
+/* Input Labels */
 label {
     display: block;
-    font-weight: 500;
+    font-size: 14pt;
 }
 
 input[type="text"],
@@ -36,24 +61,53 @@ textarea {
     width: 100%;
     padding: 8px;
     margin-top: 5px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
+    outline: none;
+    border: none;
+    border-bottom: 4px solid #7939ef;
     box-sizing: border-box;
+    font-weight: 600;
+    transition: border-bottom-color 0.3s ease;
 }
 
-input[type="file"]{
+input[type="text"]:focus,
+textarea:focus {
+    border-bottom: 4px solid #5a2dc1;
+}
+
+/* File Input */
+input[type="file"] {
     width: auto;
     padding: 8px;
     margin-top: 5px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
+    border-radius: 25px;
 }
 
-#orText{
-    margin-left: 10vw;
+input[type="file"]::-webkit-file-upload-button,
+button {
+    background-color: #7939ef;
+    color: #ffffff;
+    padding: 10px 20px;
+    margin-right: 20px;
+    cursor: pointer;
+    border-radius: 25px;
+    border: none;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 button {
+    background-color: black;
+    margin-left: auto;
+}
+
+button:hover,
+input[type="file"]::-webkit-file-upload-button:hover {
+    background-color: #5a2dc1;
+    transform: scale(1.05);
+}
+
+/* Custom Upload Button */
+.customUploadButton {
     padding: 10px 20px;
     background-color: black;
     color: #fff;
@@ -61,4 +115,30 @@ button {
     border-radius: 5px;
     cursor: pointer;
     margin-left: auto;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.customUploadButton:hover {
+    background-color: #5a2dc1;
+    transform: scale(1.05);
+}
+
+/* OR Divider */
+.or-container {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+}
+
+.line {
+    flex: 1;
+    border: none;
+    border-top: 1px solid #ccc;
+    margin: 0 10px;
+}
+
+#orText {
+    margin: 0;
+    font-size: 11pt;
+    color: #666;
 }

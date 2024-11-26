@@ -12,25 +12,30 @@
 </head>
 
 <body>
-    <h3><b>Create a Custom OpenAI Chatbot</b></h3>
+    <h3>Build a Personalized AI Assistant</h3>
     <div class="container">
         <form id="chatbotForm" action="/submit-form" method="POST" enctype="multipart/form-data">
             <div class="form-group">
-                <input type="text" id="companyName" name="companyName" placeholder="Company Name" required>
+                <label>Your Name</label>
+                <input type="text" id="companyName" name="companyName" required>
             </div>
             <div class="form-group">
-                <textarea id="chatbotInstructions" placeholder="Instructions for Chatbot Behaviour"
-                    name="chatbotInstructions" rows="5" required></textarea>
+                <label>Instructions for Assistant Behaviour</label>
+                <textarea id="chatbotInstructions"
+                    name="chatbotInstructions" rows="3" required></textarea>
             </div>
-            <h5><b>Upload Training Data</b></h5>
             <div class="form-group">
+                <label>Upload a Training File (.txt)</label>
                 <input type="file" id="uploadFile" placeholder="Upload File" name="uploadFile" accept=".txt">
-                <br><br>
-                <p id="orText"><b>or</b></p>
-                <label>Website URLs</label>
-                <textarea id = "uploadLinks" name = "uploadLinks" placeholder = "List each URL on a separate line" rows = "3"></textarea>
+                <div class="or-container">
+                    <hr class="line">
+                    <p id="orText">or</p>
+                    <hr class="line">
+                </div>
+                <label>Enter Website URLs (one per line)</label>
+                <textarea id = "uploadLinks" name = "uploadLinks" rows = "2"></textarea>
             </div>
-            <button type="submit">Generate Chatbot</button>
+            <button type="submit">Create</button>
         </form>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
