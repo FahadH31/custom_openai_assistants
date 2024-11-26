@@ -1,18 +1,18 @@
-// Client-side error handling if on chatbot.html w/o creating an assistant first.
-if (window.location.href.includes("chatbot.html")) {
-  // Fetch the information from the server
-  fetch('/api/checkAssistant')
-    .then(response => response.json())
-    .then(data => {
-      if (!data.assistantExists) {
-        alert("It seems you haven't created an assistant yet. We'll redirect you to the appropriate page now.");
-        window.location.href = "index.html"; // Redirect to index.html
-      }
-    })
-    .catch(err => {
-      console.error('Error fetching assistant status:', err);
-    });
-}
+// // Client-side error handling if on chatbot.html w/o creating an assistant first.
+// if (window.location.href.includes("chatbot.html")) {
+//   // Fetch the information from the server
+//   fetch('/api/checkAssistant')
+//     .then(response => response.json())
+//     .then(data => {
+//       if (!data.assistantExists) {
+//         alert("It seems you haven't created an assistant yet. We'll redirect you to the appropriate page now.");
+//         window.location.href = "index.html"; // Redirect to index.html
+//       }
+//     })
+//     .catch(err => {
+//       console.error('Error fetching assistant status:', err);
+//     });
+// }
 
 // Extract company name from URL query parameter
 const urlParams = new URLSearchParams(window.location.search);
@@ -20,17 +20,43 @@ const companyName = urlParams.get('companyName');
 // Set the h1 title to the extracted company name
 const companyNameTitle = document.getElementById('title');
 if (companyName) {
-  title.textContent = companyName + "'s Chatbot";
+  title.textContent = companyName + "'s AI Assistant";
 }
 
-// For Clearing Server Variables
-window.addEventListener('beforeunload', function (event) {
-  event.preventDefault();
-  // Send a signal to the server when the page is unloaded
-  fetch('/clearData', { method: 'POST' });
-  return (event.returnValue = "");
-  urlParams.companyName = "";
+// Display Assistant ID
+document.addEventListener('DOMContentLoaded', () => {
+  fetch('/api/assistant-id')
+    .then(response => response.json())
+    .then(data => {
+      const assistantIdElement = document.getElementById('assistant-id');
+      assistantIdElement.textContent = `${data.assistantId}`;
+    })
+    .catch(error => console.error('Error fetching assistant ID:', error));
 });
+
+// Copy Assistant ID to Clipboard
+function copyToClipboard() {
+  const button = document.getElementById('copy-btn');
+  const text = document.getElementById("assistant-id").innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    // Change the tooltip to "Copied"
+    button.setAttribute('data-tooltip', 'Copied!');
+
+    // Reset tooltip text after 1 seconds
+    setTimeout(() => {
+      button.setAttribute('data-tooltip', 'Copy to Clipboard');
+    }, 1000);
+  });
+}
+
+// // For Clearing Server Variables
+// window.addEventListener('beforeunload', function (event) {
+//   event.preventDefault();
+//   // Send a signal to the server when the page is unloaded
+//   fetch('/clearData', { method: 'POST' });
+//   return (event.returnValue = "");
+//   urlParams.companyName = "";
+// });
 
 // Allow for message to be submitted with enter key.
 document.getElementById('userInput').addEventListener('keypress', function (event) {

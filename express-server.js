@@ -39,12 +39,7 @@ app.use(bodyParser.json());
 // Middleware to parse incoming request bodies
 app.use(express.json());
 
-// Route to handle clearing server variables
-app.post('/clearData', (req, res) => {
-    app.locals.assistant = null;
-    app.locals.thread = null;
-    res.sendStatus(200); // Send a success response
-});
+
 //--------------------------------------------------------------------------------------------
 
 
@@ -194,6 +189,10 @@ app.get('/api/checkAssistant', (req, res) => {
     res.json({ assistantExists });
 });
 
+// To Get and Display Assistant ID
+app.get('/api/assistant-id', (req, res) => {
+    res.json({ assistantId: app.locals.assistant.id });
+});
 
 // Handle Conversation 
 app.post('/getResponse', async (req, res) => {
@@ -240,6 +239,13 @@ app.post('/getResponse', async (req, res) => {
         res.status(400).json({ error: 'Run not completed.' });
     }
 
+});
+
+// Route to handle clearing server variables
+app.post('/clearData', (req, res) => {
+    app.locals.assistant = null;
+    app.locals.thread = null;
+    res.sendStatus(200); // Send a success response
 });
 
 // Notify when server starts
