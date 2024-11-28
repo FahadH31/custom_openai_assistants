@@ -95,7 +95,6 @@ async function sendMessage() {
   }
 }
 
-
 // Responsible for displaying messages on the screen.
 function appendMessage(message, sender) {
   const chatContainer = document.getElementById('chatContainer');
@@ -135,5 +134,27 @@ function appendMessage(message, sender) {
   chatContainer.appendChild(messageContainer);
   chatContainer.scrollTop = chatContainer.scrollHeight; // Scroll to bottom
 }
+
+// Functionality for expanded input modal 
+document.getElementById("expandButton").addEventListener("click", function () {
+  const userInput = document.getElementById("userInput").value;
+  document.getElementById("expandedInput").value = userInput; // Sync input to textarea
+  document.getElementById("textareaModal").classList.add('show'); // Show modal with fade-in
+  document.getElementById("modalBackdrop").classList.add('show'); // Show backdrop with fade-in
+});
+
+document.getElementById("closeModal").addEventListener("click", function () {
+  const expandedInput = document.getElementById("expandedInput").value;
+  document.getElementById("userInput").value = expandedInput; // Sync textarea back to input
+  document.getElementById("textareaModal").classList.remove('show'); // Hide modal with fade-out
+  document.getElementById("modalBackdrop").classList.remove('show'); // Hide backdrop with fade-out
+});
+
+document.getElementById("modalBackdrop").addEventListener("click", function () {
+  document.getElementById("closeModal").click();
+});
+
+
+
 
 

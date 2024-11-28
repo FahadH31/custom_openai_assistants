@@ -1,22 +1,27 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
 
+
 /* Smooth fade-in animation for the page */
 body {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
     min-height: 100vh;
+    
     margin: 0;
+    
     font-family: 'Nunito Sans', sans-serif;
     background-color: #f8f8f8;
-    animation: fadeIn 1.0s ease-in-out;
+    animation: fadeIn 0.5s ease-in-out;
 }
 
 @keyframes fadeIn {
     from {
         opacity: 0;
     }
+
     to {
         opacity: 1;
     }
@@ -41,7 +46,7 @@ h3 {
     transition: border-color 0.3s ease, transform 0.3s ease;
 }
 
-#chatbotForm{
+#chatbotForm {
     display: flex;
     flex-direction: column;
 }
@@ -59,11 +64,11 @@ label {
 input[type="text"],
 textarea {
     width: 100%;
-    padding: 8px;
+    padding: 10px;
     margin-top: 5px;
     outline: none;
-    border: none;
-    border-bottom: 4px solid #7939ef;
+    border: 4px solid #7939ef;
+    border-radius: 25px;
     box-sizing: border-box;
     font-weight: 600;
     transition: border-bottom-color 0.3s ease;
@@ -141,4 +146,43 @@ input[type="file"]::-webkit-file-upload-button:hover {
     margin: 0;
     font-size: 11pt;
     color: #666;
+}
+
+/* Mobile Support */
+@media only screen and (max-width: 1000px) {
+    body {
+        width: 100vw;
+    }
+
+    .container {
+        width: 85%;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 15px;
+
+        max-height: 85vh;
+    }
+
+    h3 {
+        font-size: 20pt;
+        text-align: center;
+    }
+
+    label{
+        font-size: 12pt;
+    }
+
+    .form-group {
+        margin-bottom: 30px;
+    }
+
+    input[type="text"],
+    textarea {
+        font-size: 12pt;
+        padding: 8px;
+    }
+
+    button, input[type="file"]::-webkit-file-upload-button, .customUploadButton {
+        padding: 8px 16px;
+    }
 }

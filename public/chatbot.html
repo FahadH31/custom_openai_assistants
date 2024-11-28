@@ -24,9 +24,24 @@
       <!-- Chat messages are displayed here -->
     </div>
     <div class="chat-interact">
-      <input type="text" id="userInput" placeholder="Type your message...">
+      <div class="input-container">
+        <input type="text" id="userInput" placeholder="Type your message...">
+        <button id="expandButton">
+          <img id="expandButtonImg" src="Images/expand-input.png" alt="Expand">
+        </button>
+      </div>
       <button onclick="sendMessage()" id="sendButton">➤</button>
     </div>
+    
+
+    <!--Text Modal-->
+    <div id="textareaModal" class="textarea-modal">
+      <textarea id="expandedInput" class="expanded-input" placeholder="Type your message..."></textarea>
+      <button id="closeModal" class="modal-close-button">Back</button>
+    </div>
+
+    <div id="modalBackdrop" class="modal-backdrop"></div>
+
   </div>
 
   <!-- Scripts -->
