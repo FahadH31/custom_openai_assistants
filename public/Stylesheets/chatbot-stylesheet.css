@@ -137,6 +137,7 @@
 }
 
 .modal-close-button{
+  padding: 10px;
   margin-left: 10px;
   margin-bottom: 10px;
   margin-top: 10px;
@@ -147,12 +148,24 @@
   align-self: bottom;
 }
 
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .message-container {
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
   padding-top: 10px;
   padding-bottom: 10px;
+  animation: fadeIn 0.3s ease-in-out;
 }
 
 .user-message {
@@ -161,8 +174,7 @@
   color: #fff;
   border-radius: 10px;
   padding: 10px;
-  margin-left: auto;
-  /* Align user messages to the right */
+  margin-left: auto; /* Align user messages to the right */
   text-align: left;
   align-self: center;
 }
@@ -174,9 +186,28 @@
   border-radius: 10px;
   padding: 10px;
   margin-right: auto;
-  /* Align response messages to the left */
   text-align: left;
   align-self: center;
+}
+
+.loading-message {
+  max-width: 40vw;
+  width: 5vw;
+  background-color: #ccc;
+  color: #fff;
+  font-style: italic;
+  font-weight: bold;
+  opacity: 0.6;
+  border-radius: 25px;
+  padding: 10px;
+  text-align: center;
+  align-self: center;
+  animation: blink 1.5s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
 }
 
 .profile-image {
@@ -184,6 +215,7 @@
   height: 50px;
   border-radius: 50%;
   margin: 10px;
+  align-self: flex-start;
 }
 
 /* Expanded Text Input Button & Modal styling */

@@ -66,12 +66,14 @@ document.getElementById('userInput').addEventListener('keypress', function (even
 });
 
 async function sendMessage() {
-  // Remove whitespace from user input.
   const userInput = document.getElementById('userInput').value.trim();
   if (!userInput) return; // Exit if empty
 
   appendMessage(userInput, 'user'); // Display the user message
   document.getElementById('userInput').value = ''; // Clear Input Field
+
+  // Add a loading bubble while the response is loading 
+  const loadingId = appendMessage('...', 'loading');
 
   try {
     const response = await fetch('/getResponse', {
@@ -87,41 +89,42 @@ async function sendMessage() {
     }
 
     const responseData = await response.json();
-    // Display response
-    appendMessage(responseData.message, 'server');
+
+    // Replace loading bubble with the server response
+    updateLoadingMessage(loadingId, responseData.message, 'server');
   } catch (error) {
     console.error('Error sending message:', error);
-    // Handle error as needed
+    updateLoadingMessage(loadingId, 'Error occurred. Please try again.', 'server');
   }
 }
+
 
 // Responsible for displaying messages on the screen.
 function appendMessage(message, sender) {
   const chatContainer = document.getElementById('chatContainer');
 
-  // Create a div called messageContainer
   const messageContainer = document.createElement('div');
-  // Assign it the same class name.
   messageContainer.className = 'message-container';
 
-  // Set text content of messageDiv to be the one obtained from the parameter.
   const messageDiv = document.createElement('div');
   messageDiv.className = 'message';
   messageDiv.textContent = message;
 
-  // Create respective profile img elements for each message based on sender.
   const profileImg = document.createElement('img');
   profileImg.className = 'profile-image';
+
   if (sender === 'user') {
     profileImg.src = 'Images/user-image.png';
     messageDiv.classList.add('user-message');
-  } else {
+  } else if (sender === 'server') {
     profileImg.src = 'Images/bot-image.png';
     messageDiv.classList.add('bot-message');
+  } else if (sender === 'loading') {
+    // Add a class for the loading bubble
+    profileImg.src = 'Images/bot-image.png';
+    messageDiv.classList.add('loading-message');
   }
 
-  // Ensure correct display for each sender 
-  // (pic and message positioning)
   if (sender === 'user') {
     messageContainer.appendChild(messageDiv);
     messageContainer.appendChild(profileImg);
@@ -130,9 +133,21 @@ function appendMessage(message, sender) {
     messageContainer.appendChild(messageDiv);
   }
 
-  // Append message container to chat container
   chatContainer.appendChild(messageContainer);
   chatContainer.scrollTop = chatContainer.scrollHeight; // Scroll to bottom
+
+  // Return the message container for updates
+  return messageContainer;
+}
+
+function updateLoadingMessage(loadingContainer, message, sender) {
+  const messageDiv = loadingContainer.querySelector('.message');
+  messageDiv.textContent = message; // Update the text
+
+  if (sender === 'server') {
+    messageDiv.classList.remove('loading-message');
+    messageDiv.classList.add('bot-message');
+  }
 }
 
 // Functionality for expanded input modal 
