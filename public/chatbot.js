@@ -1,18 +1,18 @@
-// // Client-side error handling if on chatbot.html w/o creating an assistant first.
-// if (window.location.href.includes("chatbot.html")) {
-//   // Fetch the information from the server
-//   fetch('/api/checkAssistant')
-//     .then(response => response.json())
-//     .then(data => {
-//       if (!data.assistantExists) {
-//         alert("It seems you haven't created an assistant yet. We'll redirect you to the appropriate page now.");
-//         window.location.href = "index.html"; // Redirect to index.html
-//       }
-//     })
-//     .catch(err => {
-//       console.error('Error fetching assistant status:', err);
-//     });
-// }
+// Client-side error handling if on chatbot.html w/o having a created assistant active.
+if (window.location.href.includes("chatbot.html")) {
+  // Fetch the information from the server
+  fetch('/api/checkAssistant')
+    .then(response => response.json())
+    .then(data => {
+      if (!data.assistantExists) {
+        alert("It seems you haven't created an assistant yet. We'll redirect you to the appropriate page now.");
+        window.location.href = "index.html"; // Redirect to index.html
+      }
+    })
+    .catch(err => {
+      console.error('Error fetching assistant status:', err);
+    });
+}
 
 // Extract company name from URL query parameter
 const urlParams = new URLSearchParams(window.location.search);
@@ -49,14 +49,13 @@ function copyToClipboard() {
   });
 }
 
-// // For Clearing Server Variables
-// window.addEventListener('beforeunload', function (event) {
-//   event.preventDefault();
-//   // Send a signal to the server when the page is unloaded
-//   fetch('/clearData', { method: 'POST' });
-//   return (event.returnValue = "");
-//   urlParams.companyName = "";
-// });
+// For Clearing Server Variables
+window.addEventListener('beforeunload', function (event) {
+  event.preventDefault();
+  // Send a signal to the server when the page is unloaded
+  fetch('/clearData', { method: 'POST' });
+  return (event.returnValue = "");
+});
 
 // Allow for message to be submitted with enter key.
 document.getElementById('userInput').addEventListener('keypress', function (event) {
@@ -97,7 +96,6 @@ async function sendMessage() {
     updateLoadingMessage(loadingId, 'Error occurred. Please try again.', 'server');
   }
 }
-
 
 // Responsible for displaying messages on the screen.
 function appendMessage(message, sender) {

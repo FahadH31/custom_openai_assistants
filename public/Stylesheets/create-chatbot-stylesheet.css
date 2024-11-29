@@ -148,6 +148,19 @@ input[type="file"]::-webkit-file-upload-button:hover {
     color: #666;
 }
 
+a {
+    color: #7939ef;
+}
+
+a:hover{
+    color: #5a2dc1;
+}
+
+#revisit-prompt {
+    margin-top: 2vh;
+}
+
+
 /* Mobile Support */
 @media only screen and (max-width: 1000px) {
     body {

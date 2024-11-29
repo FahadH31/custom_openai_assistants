@@ -39,7 +39,8 @@ app.use(bodyParser.json());
 // Middleware to parse incoming request bodies
 app.use(express.json());
 
-
+// In-memory store for assistant IDs
+const assistants = new Map(); // Key: assistant ID, Value: { assistant, threads: [] }
 //--------------------------------------------------------------------------------------------
 
 
@@ -122,7 +123,14 @@ app.post('/submit-form', upload.single('uploadFile'), async (req, res) => {
 
     // Create a Thread
     const thread = await openai.beta.threads.create();
-    
+
+    // Store assistant and thread in the Map
+    assistants.set(assistant.id, {
+        assistant,
+        thread, // Initialize with the first thread
+        companyName, // Store the companyName with the assistant
+    });
+
     // Make Assistant and Thread accessible throughout the code (for other routes)
     app.locals.assistant = assistant;
     app.locals.thread = thread;
@@ -181,7 +189,6 @@ app.post('/submit-form', upload.single('uploadFile'), async (req, res) => {
     res.redirect(`/chatbot.html?companyName=${encodeURIComponent(companyName)}`);
 });
 
-
 // Server-side error handling if accessing chatbot w/o creating an assistant first.
 app.get('/api/checkAssistant', (req, res) => {
     // Logic to check if an assistant exists
@@ -193,6 +200,27 @@ app.get('/api/checkAssistant', (req, res) => {
 app.get('/api/assistant-id', (req, res) => {
     res.json({ assistantId: app.locals.assistant.id });
 });
+
+// Validate existence of entered Assistant 
+app.post('/validate-assistant', (req, res) => {
+    const { revisitAssistantID } = req.body;
+
+    // Check if the assistant ID exists in memory
+    if (assistants.has(revisitAssistantID)) {
+        
+        const assistantData = assistants.get(revisitAssistantID);
+        app.locals.assistant = assistantData.assistant; // Set assistant
+        app.locals.thread = assistantData.thread;
+        const companyName = assistantData.companyName; // Retrieve the stored companyName
+        
+        // Redirect to the chat page, passing the assistant ID and companyName in the query string
+        res.redirect(`/chatbot.html?assistantID=${encodeURIComponent(revisitAssistantID)}&companyName=${encodeURIComponent(companyName)}`);
+    } else {
+        // Send an error message or redirect to an error page
+        res.status(404).send('Assistant not found. Please check the ID and try again.');
+    }
+});
+
 
 // Handle Conversation 
 app.post('/getResponse', async (req, res) => {
