@@ -15,7 +15,7 @@ $(document).ready(function () {
         }
         else if ($('#uploadFile').val() && $('#uploadLinks').val()) {
             alert('Please provide only a URL, or only a file.');
-            return false; // Prevent form submission
+            return false;
         }
     });
 });

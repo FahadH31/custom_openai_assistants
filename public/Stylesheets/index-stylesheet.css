@@ -27,7 +27,6 @@ body {
     }
 }
 
-/* Title */
 h3 {
     padding: 10px;
     font-size: 32pt;
@@ -46,7 +45,7 @@ h3 {
     transition: border-color 0.3s ease, transform 0.3s ease;
 }
 
-#chatbotForm {
+#chatbot-form {
     display: flex;
     flex-direction: column;
 }
@@ -74,12 +73,7 @@ textarea {
     transition: border-bottom-color 0.3s ease;
 }
 
-input[type="text"]:focus,
-textarea:focus {
-    border-bottom: 4px solid #5a2dc1;
-}
-
-/* File Input */
+/* File Upload */
 input[type="file"] {
     width: auto;
     padding: 8px;
@@ -87,6 +81,7 @@ input[type="file"] {
     border-radius: 25px;
 }
 
+/* File Upload Button */
 input[type="file"]::-webkit-file-upload-button,
 button {
     background-color: #7939ef;
@@ -105,30 +100,16 @@ button {
     margin-left: auto;
 }
 
-button:hover,
+button:hover{
+    transform: scale(1.05);
+}
+
 input[type="file"]::-webkit-file-upload-button:hover {
     background-color: #5a2dc1;
     transform: scale(1.05);
 }
 
-/* Custom Upload Button */
-.customUploadButton {
-    padding: 10px 20px;
-    background-color: black;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-left: auto;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-.customUploadButton:hover {
-    background-color: #5a2dc1;
-    transform: scale(1.05);
-}
-
-/* OR Divider */
+/* Or Divider */
 .or-container {
     display: flex;
     align-items: center;
@@ -142,7 +123,7 @@ input[type="file"]::-webkit-file-upload-button:hover {
     margin: 0 10px;
 }
 
-#orText {
+#or-text {
     margin: 0;
     font-size: 11pt;
     color: #666;

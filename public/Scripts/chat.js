@@ -1,12 +1,12 @@
 // Client-side error handling if on chatbot.html w/o having a created assistant active.
-if (window.location.href.includes("chatbot.html")) {
+if (window.location.href.includes("chat.html")) {
   // Fetch the information from the server
   fetch('/api/checkAssistant')
     .then(response => response.json())
     .then(data => {
       if (!data.assistantExists) {
         alert("It seems you haven't created an assistant yet. We'll redirect you to the appropriate page now.");
-        window.location.href = "index.html"; // Redirect to index.html
+        window.location.href = "../index.html"; // Redirect to index.html
       }
     })
     .catch(err => {
@@ -58,18 +58,18 @@ window.addEventListener('beforeunload', function (event) {
 });
 
 // Allow for message to be submitted with enter key.
-document.getElementById('userInput').addEventListener('keypress', function (event) {
+document.getElementById('user-input').addEventListener('keypress', function (event) {
   if (event.key === 'Enter') {
     sendMessage();
   }
 });
 
 async function sendMessage() {
-  const userInput = document.getElementById('userInput').value.trim();
+  const userInput = document.getElementById('user-input').value.trim();
   if (!userInput) return; // Exit if empty
 
   appendMessage(userInput, 'user'); // Display the user message
-  document.getElementById('userInput').value = ''; // Clear Input Field
+  document.getElementById('user-input').value = ''; // Clear Input Field
 
   // Add a loading bubble while the response is loading 
   const loadingId = appendMessage('...', 'loading');
@@ -99,7 +99,7 @@ async function sendMessage() {
 
 // Responsible for displaying messages on the screen.
 function appendMessage(message, sender) {
-  const chatContainer = document.getElementById('chatContainer');
+  const chatContainer = document.getElementById('chat-container');
 
   const messageContainer = document.createElement('div');
   messageContainer.className = 'message-container';
@@ -112,14 +112,14 @@ function appendMessage(message, sender) {
   profileImg.className = 'profile-image';
 
   if (sender === 'user') {
-    profileImg.src = 'Images/user-image.png';
+    profileImg.src = '../Images/user-image.png';
     messageDiv.classList.add('user-message');
   } else if (sender === 'server') {
-    profileImg.src = 'Images/bot-image.png';
-    messageDiv.classList.add('bot-message');
+    profileImg.src = '../Images/assistant-image.png';
+    messageDiv.classList.add('assistant-message');
   } else if (sender === 'loading') {
     // Add a class for the loading bubble
-    profileImg.src = 'Images/bot-image.png';
+    profileImg.src = '../Images/assistant-image.png';
     messageDiv.classList.add('loading-message');
   }
 
@@ -144,27 +144,28 @@ function updateLoadingMessage(loadingContainer, message, sender) {
 
   if (sender === 'server') {
     messageDiv.classList.remove('loading-message');
-    messageDiv.classList.add('bot-message');
+    messageDiv.classList.add('assistant-message');
   }
 }
 
-// Functionality for expanded input modal 
-document.getElementById("expandButton").addEventListener("click", function () {
-  const userInput = document.getElementById("userInput").value;
-  document.getElementById("expandedInput").value = userInput; // Sync input to textarea
-  document.getElementById("textareaModal").classList.add('show'); // Show modal with fade-in
-  document.getElementById("modalBackdrop").classList.add('show'); // Show backdrop with fade-in
+// Expand Input Button
+document.getElementById("expand-btn").addEventListener("click", function () {
+  const userInput = document.getElementById("user-input").value;
+  document.getElementById("textarea-input").value = userInput;      // Sync input to textarea
+  document.getElementById("textarea-modal").classList.add('show');  // Show modal with fade-in
+  document.getElementById("modal-backdrop").classList.add('show');  // Show backdrop with fade-in
 });
 
-document.getElementById("closeModal").addEventListener("click", function () {
-  const expandedInput = document.getElementById("expandedInput").value;
-  document.getElementById("userInput").value = expandedInput; // Sync textarea back to input
-  document.getElementById("textareaModal").classList.remove('show'); // Hide modal with fade-out
-  document.getElementById("modalBackdrop").classList.remove('show'); // Hide backdrop with fade-out
+// Close Modal Button
+document.getElementById("modal-close-btn").addEventListener("click", function () {
+  const expandedInput = document.getElementById("textarea-input").value;
+  document.getElementById("user-input").value = expandedInput;    // Sync textarea back to input
+  document.getElementById("textarea-modal").classList.remove('show');    
+  document.getElementById("modal-backdrop").classList.remove('show');    
 });
 
-document.getElementById("modalBackdrop").addEventListener("click", function () {
-  document.getElementById("closeModal").click();
+document.getElementById("modal-backdrop").addEventListener("click", function () {
+  document.getElementById("modal-close-btn").click();
 });
 
 

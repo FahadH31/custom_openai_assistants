@@ -3,7 +3,6 @@
 .container {
   margin: 0;
   padding: 40px;
-  /* Ensure the body takes up at least the viewport height and width */
   min-height: 100vh;
   min-width: 100vw;
   background-color: #f8f8f8;
@@ -19,53 +18,15 @@
   font-weight: 700;
 }
 
-.id-container {
+#id-container {
   display: flex;
   justify-content: center;
-  position: relative;
-  /* Ensure the tooltip positions relative to the container */
+  position: relative; /* Ensure tooltip positions relative to the container */
 }
 
 #assistant-id {
   align-self: center;
-  position: relative;
-  /* Required for positioning the tooltip */
-}
-
-/* Tooltip Styles */
-#assistant-id:hover::after,
-#copy-btn:hover::after {
-  content: attr(data-tooltip);
-  position: absolute;
-  top: 100%;
-  left: 55%;
-  transform: translateX(-50%);
-  background-color: rgba(0, 0, 0, 0.7);
-  color: white;
-  padding: 5px 10px;
-  border-radius: 5px;
-  font-size: 10pt;
-  white-space: nowrap;
-  z-index: 10;
-  opacity: 0;
-  animation: fadeIn 0.3s forwards;
-
-  margin-top: 5px;
-}
-
-#copy-btn:hover::after {
-  left: 60%;
-}
-
-/* Animation for tooltip */
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-
-  100% {
-    opacity: 1;
-  }
+  position: relative; /* Required for positioning the tooltip */
 }
 
 #copy-btn {
@@ -88,28 +49,80 @@
   opacity: 60%;
 }
 
+/* Tooltip Styles */
+#assistant-id:hover::after,
+#copy-btn:hover::after {
+  content: attr(data-tooltip);
+
+  position: absolute;
+  top: 100%;
+  left: 55%;
+  transform: translateX(-50%);
+
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+
+  margin-top: 5px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 10pt;
+  white-space: nowrap;
+  z-index: 10;
+
+  opacity: 0;
+  animation: fadeInTooltip 0.3s forwards;
+
+}
+
+#copy-btn:hover::after {
+  left: 60%;
+}
+
+/* Fade-in animation for tooltip */
+@keyframes fadeInTooltip {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
 .chat-container {
   height: 70vh;
+
   margin-left: 100px;
   margin-right: 100px;
   margin-bottom: 20px;
   margin-top: 20px;
-  background-color: white;
   border: 1px solid #ccc;
+
+  background-color: white;
+  
   overflow-y: scroll;
+  
   display: flex;
   flex-direction: column;
+  
   font-size: 15pt;
 }
 
-.chat-interact {
+.chat-interact-container {
   display: flex;
   flex-direction: row;
   margin-left: 100px;
   margin-right: 100px;
 }
 
-#userInput {
+/* Expanded Text Input Button & Modal styling */
+.input-container {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+#user-input {
   width: 100%;
   padding: 10px;
   padding-right: 40px;
@@ -123,7 +136,28 @@
   box-sizing: border-box;
 }
 
-#sendButton, .modal-close-button {
+#expand-btn {
+  position: absolute;
+  top: 49%;
+  right: 12px;
+  /* Adjust spacing from the edge */
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+#expand-btn-img {
+  width: 19px;
+  /* Adjust size */
+  height: auto;
+  padding: 0;
+  align-self: center;
+  opacity: 40%;
+}
+
+#send-btn, #modal-close-btn {
   padding: 10px 20px;
   background-color: #7939ef;
   color: #fff;
@@ -136,27 +170,16 @@
   transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-.modal-close-button{
+#modal-close-btn{
   padding: 10px;
   margin-left: 10px;
   margin-bottom: 10px;
   margin-top: 10px;
 }
 
-#sendButton:hover, .modal-close-button:hover {
+#send-btn:hover, #modal-close-btn:hover {
   background-color: #5a2dc1;
   align-self: bottom;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(3px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 .message-container {
@@ -165,7 +188,19 @@
   align-items: flex-start;
   padding-top: 10px;
   padding-bottom: 10px;
-  animation: fadeIn 0.3s ease-in-out;
+  animation: fadeInMessage 0.3s ease-in-out;
+}
+
+/* Animation to fade in messages within chat-container */
+@keyframes fadeInMessage {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .user-message {
@@ -179,7 +214,7 @@
   align-self: center;
 }
 
-.bot-message {
+.assistant-message {
   max-width: 40vw;
   background-color: #7939ef;
   color: #fff;
@@ -190,6 +225,7 @@
   align-self: center;
 }
 
+/* Loading bubble when waiting on response */
 .loading-message {
   max-width: 40vw;
   width: 5vw;
@@ -218,35 +254,9 @@
   align-self: flex-start;
 }
 
-/* Expanded Text Input Button & Modal styling */
-.input-container {
-  position: relative;
-  display: inline-block;
-  width: 100%;
-}
 
-#expandButton {
-  position: absolute;
-  top: 49%;
-  right: 12px;
-  /* Adjust spacing from the edge */
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-}
-
-#expandButtonImg {
-  width: 19px;
-  /* Adjust size */
-  height: auto;
-  padding: 0;
-  align-self: center;
-  opacity: 40%;
-}
-
-.textarea-modal {
+/* Modal styles */
+#textarea-modal {
   visibility: hidden;
   position: fixed;
 
@@ -268,7 +278,7 @@
   border-radius: 15px;
 }
 
-.expanded-input {
+#textarea-input {
   width: 100%;
   height: 89.5%;
   padding: 20px;
@@ -280,7 +290,7 @@
   resize: none;
 }
 
-.modal-backdrop {
+#modal-backdrop {
   visibility: hidden;
   position: fixed;
   top: 0;
@@ -293,7 +303,7 @@
   opacity: 0;
 }
 
-.textarea-modal.show, .modal-backdrop.show {
+#textarea-modal.show, #modal-backdrop.show {
   visibility: visible;
   opacity: 1;
   transition: opacity 0.3s ease-in-out;
@@ -302,7 +312,7 @@
 /*Mobile Screens*/
 @media only screen and (max-width: 1000px) {
 
-  #expandButton,
+  #expand-btn,
   .modal {
     display: none;
   }
@@ -332,18 +342,18 @@
     margin-right: auto;
   }
 
-  .chat-interact {
+  .chat-interact-container {
     margin-left: auto;
     margin-right: auto;
   }
 
-  #userInput {
+  #user-input {
     width: 65vw;
     font-size: 10pt;
     margin-right: 0;
   }
 
-  #sendButton {
+  #send-btn {
     max-width: 20vw;
     width: 20vw;
     margin-left: 0;
@@ -356,7 +366,7 @@
   }
 
   .user-message,
-  .bot-message {
+  .assistant-message {
     max-width: 70vw;
     font-size: 12pt;
   }

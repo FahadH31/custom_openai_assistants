@@ -1,4 +1,4 @@
-// PROJECT-SETUP-------------------------------------------------------------------------------
+//-- Project Setup --//
 const OpenAI = require("openai");
 const dotenv = require("dotenv");
 const path = require('path');
@@ -41,10 +41,9 @@ app.use(express.json());
 
 // In-memory store for assistant IDs
 const assistants = new Map(); // Key: assistant ID, Value: { assistant, threads: [] }
-//--------------------------------------------------------------------------------------------
 
 
-// FUNCTIONS-----------------------------------------------------------------------------------
+//-- Functions --//
 // Fetch HTML content from a URL using axios
 async function fetchHTML(url) {
     try {
@@ -97,9 +96,8 @@ async function createVectorStore(assistant, fileId) {
         throw error; // Rethrow the error for the caller to handle
     }
 }
-//--------------------------------------------------------------------------------------------
 
-// ROUTES--------------------------------------------------------------------------------------
+//-- Routes --//
 // Handle create-chatbot form submission
 app.post('/submit-form', upload.single('uploadFile'), async (req, res) => {
     // Importing form data
@@ -186,7 +184,7 @@ app.post('/submit-form', upload.single('uploadFile'), async (req, res) => {
     }
 
     // Append company name to the URL for chatbot, so it can be used to the title (and redirect)
-    res.redirect(`/chatbot.html?companyName=${encodeURIComponent(companyName)}`);
+    res.redirect(`/Pages/chat.html?companyName=${encodeURIComponent(companyName)}`);
 });
 
 // Server-side error handling if accessing chatbot w/o creating an assistant first.
@@ -214,13 +212,12 @@ app.post('/validate-assistant', (req, res) => {
         const companyName = assistantData.companyName; // Retrieve the stored companyName
         
         // Redirect to the chat page, passing the assistant ID and companyName in the query string
-        res.redirect(`/chatbot.html?assistantID=${encodeURIComponent(revisitAssistantID)}&companyName=${encodeURIComponent(companyName)}`);
+        res.redirect(`/Pages/chat.html?assistantID=${encodeURIComponent(revisitAssistantID)}&companyName=${encodeURIComponent(companyName)}`);
     } else {
         // Send an error message or redirect to an error page
         res.status(404).send('Assistant not found. Please check the ID and try again.');
     }
 });
-
 
 // Handle Conversation 
 app.post('/getResponse', async (req, res) => {
@@ -276,7 +273,6 @@ app.post('/clearData', (req, res) => {
     res.sendStatus(200); // Send a success response
 });
 
-// Notify when server starts
 app.listen(3000, () => {
     console.log("Server Started");
 });
