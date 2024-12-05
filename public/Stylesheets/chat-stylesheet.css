@@ -21,25 +21,27 @@
 #id-container {
   display: flex;
   justify-content: center;
-  position: relative; /* Ensure tooltip positions relative to the container */
+  position: relative;
+  /* Ensure tooltip positions relative to the container */
 }
 
 #assistant-id {
   align-self: center;
-  position: relative; /* Required for positioning the tooltip */
+  position: relative;
+  /* Required for positioning the tooltip */
 }
 
 #copy-btn {
   padding: 0;
   height: fit-content;
   border: 0;
-  background-color: #f8f8f8;
   margin-left: 9px;
   align-self: center;
 
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: transparent;
 }
 
 #copy-icon {
@@ -99,12 +101,12 @@
   border: 1px solid #ccc;
 
   background-color: white;
-  
+
   overflow-y: scroll;
-  
+
   display: flex;
   flex-direction: column;
-  
+
   font-size: 15pt;
 }
 
@@ -157,7 +159,8 @@
   opacity: 40%;
 }
 
-#send-btn, #modal-close-btn {
+#send-btn,
+#modal-close-btn {
   padding: 10px 20px;
   background-color: #7939ef;
   color: #fff;
@@ -170,14 +173,15 @@
   transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-#modal-close-btn{
+#modal-close-btn {
   padding: 10px;
   margin-left: 10px;
   margin-bottom: 10px;
   margin-top: 10px;
 }
 
-#send-btn:hover, #modal-close-btn:hover {
+#send-btn:hover,
+#modal-close-btn:hover {
   background-color: #5a2dc1;
   align-self: bottom;
 }
@@ -197,6 +201,7 @@
     opacity: 0;
     transform: translateY(3px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -209,7 +214,8 @@
   color: #fff;
   border-radius: 10px;
   padding: 10px;
-  margin-left: auto; /* Align user messages to the right */
+  margin-left: auto;
+  /* Align user messages to the right */
   text-align: left;
   align-self: center;
 }
@@ -242,8 +248,15 @@
 }
 
 @keyframes blink {
-  0%, 100% { opacity: 0.6; }
-  50% { opacity: 1; }
+
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+
+  50% {
+    opacity: 1;
+  }
 }
 
 .profile-image {
@@ -285,7 +298,7 @@
 
   border-radius: 15px;
   border: none;
-  
+
   outline: none;
   resize: none;
 }
@@ -299,11 +312,12 @@
   height: 100%;
   background: rgba(48, 48, 48, 0.5);
   z-index: 999;
-  
+
   opacity: 0;
 }
 
-#textarea-modal.show, #modal-backdrop.show {
+#textarea-modal.show,
+#modal-backdrop.show {
   visibility: visible;
   opacity: 1;
   transition: opacity 0.3s ease-in-out;
@@ -313,7 +327,8 @@
 @media only screen and (max-width: 1000px) {
 
   #expand-btn,
-  .modal {
+  .modal,
+  #theme-toggle {
     display: none;
   }
 
@@ -370,4 +385,68 @@
     max-width: 70vw;
     font-size: 12pt;
   }
+}
+
+/* Dark Theme */
+#theme-toggle {
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-size: contain;
+
+  min-width: 20px;
+  min-height: 20px;
+  
+  border: none;
+
+  position: fixed;
+  top: 0;
+  right: 0;
+  margin-top: 20px;
+  margin-right: 25px;
+}
+
+#theme-toggle.light {
+  background-image: url('../Images/dark-mode-toggle.png');
+}
+
+#theme-toggle.dark {
+  background-image: url('../Images/light-mode-toggle.png');
+  filter: invert();
+}
+
+html[data-theme="dark"] .container {
+  background-color: #1c1c1c;
+  color: #ccc;
+  scrollbar-color: #202020 #181818;
+}
+
+html[data-theme="dark"] .chat-container {
+  background-color: #202020;
+  border: none;
+}
+
+html[data-theme="dark"] #user-input {
+  background-color: #202020;
+  color: #ccc;
+  border: none;
+}
+
+html[data-theme="dark"] #textarea-modal,
+html[data-theme="dark"] #textarea-input {
+  background-color: #1c1c1c;
+  color: #ccc;
+}
+
+html[data-theme="dark"] #copy-icon,
+html[data-theme="dark"] #expand-btn-img {
+  filter: invert()
+}
+
+html[data-theme="dark"] #send-btn,
+html[data-theme="dark"] #modal-close-btn {
+  color: #ccc;
+}
+
+html[data-theme="dark"] .profile-image {
+  filter: brightness(75%);
 }

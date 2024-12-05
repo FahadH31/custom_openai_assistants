@@ -9,13 +9,14 @@ body {
     align-items: center;
 
     min-height: 100vh;
-    
+
     margin: 0;
-    
+
     font-family: 'Nunito Sans', sans-serif;
     background-color: #f8f8f8;
     animation: fadeIn 0.5s ease-in-out;
 }
+
 
 @keyframes fadeIn {
     from {
@@ -100,7 +101,7 @@ button {
     margin-left: auto;
 }
 
-button:hover{
+button:hover {
     transform: scale(1.05);
 }
 
@@ -133,7 +134,7 @@ a {
     color: #7939ef;
 }
 
-a:hover{
+a:hover {
     color: #5a2dc1;
 }
 
@@ -144,6 +145,10 @@ a:hover{
 
 /* Mobile Support */
 @media only screen and (max-width: 1000px) {
+    #theme-toggle {
+        display: none;
+    }
+
     body {
         width: 100vw;
     }
@@ -162,7 +167,7 @@ a:hover{
         text-align: center;
     }
 
-    label{
+    label {
         font-size: 12pt;
     }
 
@@ -176,7 +181,50 @@ a:hover{
         padding: 8px;
     }
 
-    button, input[type="file"]::-webkit-file-upload-button, .customUploadButton {
+    button,
+    input[type="file"]::-webkit-file-upload-button,
+    .customUploadButton {
         padding: 8px 16px;
     }
+}
+
+
+/* Dark Theme*/
+#theme-toggle {
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: fit-content;
+    height: auto;
+
+    position: fixed;
+    top: 0;
+    right: 0;
+    margin-top: 20px;
+    margin-right: 5px;
+}
+
+#theme-toggle.light {
+    background-image: url('../Images/dark-mode-toggle.png');
+}
+
+#theme-toggle.dark {
+    background-image: url('../Images/light-mode-toggle.png');
+    filter: invert();
+}
+
+html[data-theme="dark"] body {
+    background-color: #1c1c1c;
+    color: #ccc;
+}
+
+html[data-theme="dark"] .container {
+    background-color: #202020;
+    border: none;
+}
+
+html[data-theme="dark"] input[type="text"],
+html[data-theme="dark"] textarea {
+    color: #ccc;
+    background-color: #202020;
 }

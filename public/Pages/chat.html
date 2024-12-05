@@ -12,18 +12,21 @@
 </head>
 
 <body>
+  <button id="theme-toggle" aria-label="Toggle Dark Mode"></button>
   <div class="container">
+
     <h1 id="title"></h1>
 
     <div id="id-container">
       <div id="assistant-id" data-tooltip="Use this ID to share or return to this assistant!">
-        <!-- Assistant ID is displayed here --></div>
+        <!-- Assistant ID is displayed here -->
+      </div>
       <button data-tooltip="Copy to Clipboard" id="copy-btn" onclick="copyToClipboard()">
         <img id="copy-icon" src="../Images/copy-to-clipboard.png">
       </button>
     </div>
 
-    <div class="chat-container" id = "chat-container">
+    <div class="chat-container" id="chat-container">
       <!-- Chat messages are displayed here -->
     </div>
 
@@ -50,6 +53,7 @@
 
   <!-- Scripts -->
   <script src="../Scripts/chat.js"></script>
+  <script src="../Scripts/toggle-theme.js"></script>
 </body>
 
 </html>
