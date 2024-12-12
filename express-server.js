@@ -277,6 +277,8 @@ app.post('/clearData', (req, res) => {
     res.sendStatus(200); // Send a success response
 });
 
-app.listen(3000, () => {
-    console.log("Server Started");
+const PORT = process.env.PORT || 3000; // Use PORT environment variable or default to 3000
+app.listen(PORT, () => {
+    console.log(`Server started on port ${PORT}`);
 });
+
