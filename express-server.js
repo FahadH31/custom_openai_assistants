@@ -98,6 +98,10 @@ async function createVectorStore(assistant, fileId) {
 }
 
 //-- Routes --//
+app.get('/ping', (req, res) => {
+  res.status(200).send('OK');
+});
+
 // Handle create-chatbot form submission
 app.post('/submit-form', upload.single('uploadFile'), async (req, res) => {
     // Importing form data
